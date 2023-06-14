@@ -28,11 +28,19 @@ with st.form(key='insert_form'):
         else:
             st.error('Sigla nazione non supportata, ritenta.')
 
+
+
 st.write("## Read")
 nome = st.text_input('Player')
 search_button = st.button('Cerca per nome')
+query = {
+    'Player': {
+        '$regex': nome,
+        '$options': 'i' # case-insensitive
+    }
+}
 if search_button:
-    data = collection.find({'Player': nome})
+    data = collection.find(query)
     st.table(data)
 
 st.write("## Update")
