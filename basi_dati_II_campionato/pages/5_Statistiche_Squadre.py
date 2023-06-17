@@ -8,14 +8,19 @@ collection = db['squadre']
 
 st.title('Statistiche Squadre')
 
-st.write('Squadre con più Gol')
-marcatori = pd.DataFrame(collection.find().sort([('Goal_Done',-1)]))
-st.table(marcatori[['Squad','Goal_Done']].head())
+option = st.selectbox(
+    'Seleziona la squadra di cui vuoi conoscere i giocatori',
+    ('Goal Fatti','Goal Subiti','Età'))
 
-st.write('Squadre che hanno subito più Gol')
-marcatori = pd.DataFrame(collection.find().sort([('Goal_Taken',-1)]))
-st.table(marcatori[['Squad','Goal_Taken']].head())
+order = -1
+if option == "Goal Fatti" :
+    param = 'Goal_Done'
+elif option == "Goal Subiti" :
+    param = 'Goal_Taken'
+else :
+    param = 'Age'
+    order = 1
 
-st.write('Squadre Mediamente più Giovani')
-squads = pd.DataFrame(collection.find().sort([('Age',1)]))
-st.table(squads[['Squad','Age']].head())
+filtered = pd.DataFrame(collection.find().sort(param, order))
+st.table(filtered[['Squad',param]])
+
